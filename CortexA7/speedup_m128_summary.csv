@@ -1,0 +1,5 @@
+threads,cycles_max,speedup_vs_1,efficacite_globale,gain_local,efficacite_locale,efficacite_marginale,folder
+1,24035672,1.000000,1.000000,,,,t1_arm_detailed_L1L2_manualstyle
+2,11659224,2.061516,1.030758,2.061516,1.030758,1.061516,t2_arm_detailed_L1L2_manualstyle
+4,5946172,4.042209,1.010552,1.960795,0.980397,0.990347,t4_arm_detailed_L1L2_manualstyle
+8,3322442,7.234339,0.904292,1.789699,0.894850,0.798032,t8_arm_detailed_L1L2_manualstyle
