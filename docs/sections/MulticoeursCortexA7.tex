@@ -25,3 +25,123 @@ La Figure~\ref{fig:cycles_per_configuration_cortex_a7} présente le nombre de cy
 Il est proposé de poursuivre l’analyse avec l’estimation du nombre minimal de cycles d’exécution de l’application pour une taille de matrice $M=16$, et ce pour chacune des configurations proposées. Les résultats correspondants sont présentés dans la Figure~\ref{fig:cycles_per_configuration_cortex_a7}. On observe que, même si l’exécution devient plus rapide, le gain de performance n’est pas proportionnel au nombre de threads utilisés, principalement à cause de l’impact des accès mémoire et de la présence des étapes du traitement qui ne sont pas parallélisables et dont le coût devient prépondérant lorsque le temps de calcul parallèle diminue. En particulier, les phases d’initialisation, exécutées séquentiellement par le \emph{master}, constituent une fraction croissante du temps total à mesure que l’optimisation accélère la région de calcul en parallèle. De plus, lorsque le nombre de threads augmente, la quantité d’accès concurrents aux caches partagés (L2/L3) et à la RAM croît également, ce qui génère de la contention et un plus grand nombre de défauts de cache, réduisant ainsi le gain marginal apporté par l’ajout de threads. Par ailleurs, l’écriture concurrente dans la matrice $C$ induit un trafic supplémentaire de cohérence de cache (invalidations et mises à jour de lignes), introduisant des surcoûts absents de la version séquentielle. Enfin, il existe un surcoût propre à OpenMP (création et gestion des threads, ainsi que barrières implicites à la fin du \texttt{parallel for}) qui devient relativement plus significatif lorsque la charge de travail par thread n’est pas suffisamment élevée ou lorsque le \emph{blocking} pour le cache n’est pas mis en œuvre de manière efficace. Par conséquent, le \emph{speedup} observé reflète la combinaison de l’amélioration due au parallélisme et des limites pratiques imposées par la hiérarchie mémoire, ainsi que des coûts de coordination.
 
 Il convient de souligner que, dans le cas où $m$ correspond au nombre de threads, on observe une augmentation du nombre de cycles en passant à $16$ threads par rapport à l’exécution avec $8$ threads. Ce comportement peut s’expliquer par le fait qu’avec $16$ threads, la charge de travail utile par thread devient si faible que le surcoût OpenMP domine l’exécution de la phase parallèle. Cette dégradation est notamment amplifiée par l’augmentation du trafic de cohérence (invalidations et transferts de lignes lors des écritures) ainsi que par une pression accrue sur la mémoire partagée, en particulier le cache L2.
+
+\subsection{Speed-Up per configuration}
+
+Les résultats de \emph{speedup} et d’efficacité globale, calculés par rapport à la configuration à $1$ thread, sont présentés pour $m=16$ et $m=128$ dans la Figure~\ref{fig:speedup_efficiency_cortex_a7}.
+
+\begin{figure}[H]
+    \centering
+    \subfloat[$m=16$ : \emph{Speedup}]{
+        \includegraphics[width=0.48\textwidth]{../CortexA7/speedup_m16_vs_1thread.png}
+        \label{fig:speedup_m16_cortex_a7}
+    }
+    \hfill
+    \subfloat[$m=16$ : Efficacité globale]{
+        \includegraphics[width=0.48\textwidth]{../CortexA7/efficacite_m16.png}
+        \label{fig:efficacite_m16_cortex_a7}
+    }
+
+    \vspace{0.4em}
+
+    \subfloat[$m=128$ : \emph{Speedup}]{
+        \includegraphics[width=0.48\textwidth]{../CortexA7/speedup_m128_vs_1thread.png}
+        \label{fig:speedup_m128_cortex_a7}
+    }
+    \hfill
+    \subfloat[$m=128$ : Efficacité globale]{
+        \includegraphics[width=0.48\textwidth]{../CortexA7/efficacite_m128.png}
+        \label{fig:efficacite_m128_cortex_a7}
+    }
+    \caption{Comparaison du \emph{speedup} et de l’efficacité globale pour les configurations Cortex-A7 (\(m=16\) et \(m=128\)).}
+    \label{fig:speedup_efficiency_cortex_a7}
+\end{figure}
+
+En analysant les \emph{speedups} pour $m=16$, on constate que la quantité d’opérations réellement parallélisables n’est pas suffisamment représentative par rapport aux surcoûts de parallélisation d’OpenMP, voire par rapport à la section linéaire du programme. Cette observation est cohérente avec le fait que les \emph{speedups} entre configurations restent inférieurs à $1.3$ dans le meilleur des cas, et qu’ils demeurent éloignés de la courbe idéale de \emph{speedup}. De plus, si l’on évalue l’efficacité liée à l’ajout de nouveaux threads, on observe qu’elle diminue fortement à mesure que le nombre de threads augmente. En revanche, lorsque l’on accroît la dimension de la matrice, l’augmentation de la complexité et du volume des opérations parallélisables se traduit par des \emph{speedups} plus significatifs lors de l’augmentation du nombre de threads. C’est notamment le cas pour une matrice de taille $m=128$, où les \emph{speedups} obtenus se rapprochent davantage du comportement idéal, ce qui se reflète par des efficacités proches de $1$ pour les différentes configurations de cette application avec $m=128$.
+
+\subsection{valeur maximale de l’IPC pour chaque configuration}
+
+En termes d’IPC, il est proposé d’analyser l’IPC maximal par CPU pour les configurations considérées ; on met alors en évidence qu’il n’existe pas de relation directe avec le nombre de threads employés. En revanche, si l’on considère l’IPC global de chaque configuration, on observe que le nombre d’instructions traitées par cycle augmente de manière quasi linéaire avec l’ajout de chaque thread, en s’appuyant sur l’expression donnée à l’équation~\eqref{eq:ipc_global}. Il convient également de mentionner que, lorsque la taille de la matrice est plus grande, l’IPC global obtenu est sensiblement supérieur à celui mesuré pour une valeur de $m$ plus faible, ce qui se traduit par une pente plus marquée de la droite reliant les valeurs d’IPC estimées pour chaque configuration.
+
+\begin{equation}
+\mathrm{IPC}_{\mathrm{global}}=\frac{\mathrm{sim\_insts}}{\max\!\left(\mathrm{numCycles}\right)}.
+\label{eq:ipc_global}
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[IPC maximal par configuration (par CPU)]{
+        \includegraphics[width=0.48\textwidth]{../CortexA7/ipc_max_m16_m128.png}
+        \label{fig:ipc_max_m16_m128}
+    }
+    \hfill
+    \subfloat[IPC global par configuration (\(\mathrm{sim\_insts}/\max(\mathrm{numCycles})\))]{
+        \includegraphics[width=0.48\textwidth]{../CortexA7/ipc_global_m16_m128.png}
+        \label{fig:ipc_global_m16_m128}
+    }
+    \caption{Comparaison des métriques IPC pour les simulations Cortex-A7 (\(m=16\) et \(m=128\)).}
+    \label{fig:ipc_comparison_cortex_a7}
+\end{figure}
+
+\subsection{Hiérarchie mémoire sans L2}
+
+\subsubsection{Cycles per configuration}
+Il est proposé, en tant que composante d’analyse supplémentaire, d’étudier les résultats de la même configuration mais en l’absence d’une mémoire cache L2 pour l’application, en ne considérant dans la hiérarchie mémoire que les deux caches L1 (cache de données et cache d’instructions). Dans ce contexte, il a été choisi d’évaluer le comportement pour une taille de matrice $m=128$, afin de garantir une comparaison directe avec les résultats présentés précédemment.
+
+Pour la hiérarchie mémoire avec cache L2 activé, les résultats Cortex A7 (\emph{in-order}) pour \(m=128\) sont résumés dans la Table~\ref{tab:cortex_a7_m128_l2_results}.
+
+\begin{table}[H]
+\centering
+\caption{Résultats Cortex A7 (\emph{in-order}), \(m=128\).}
+\label{tab:cortex_a7_m128_l2_results}
+\begin{tabular}{rrrr}
+\hline
+\textbf{Threads} & \textbf{sim\_ticks} & \textbf{Cycles max} & \textbf{sim\_insts} \\
+\hline
+1  & 45\,387\,718\,500 & 90\,775\,438 & 32\,000\,412 \\
+2  & 23\,542\,334\,500 & 47\,084\,670 & 32\,016\,938 \\
+4  & 14\,050\,578\,500 & 28\,101\,158 & 32\,068\,570 \\
+8  & 13\,601\,720\,500 & 27\,203\,442 & 32\,866\,791 \\
+16 & 11\,374\,642\,500 & 22\,749\,286 & 35\,160\,170 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Speed-Up per configuration}
+
+Le \emph{speedup} augmente jusqu’à 4 threads puis tend à se stabiliser. Les valeurs observées sont résumées dans la Table~\ref{tab:speedup_sans_l2_m128}.
+
+\begin{table}[H]
+\centering
+\caption{Speedup observé par rapport à 1 thread (Cortex-A7, sans L2, \(m=128\)).}
+\label{tab:speedup_sans_l2_m128}
+\begin{tabular}{cc}
+\hline
+\textbf{Threads} & \textbf{Speedup} \\
+\hline
+2  & 1.93 \\
+4  & 3.23 \\
+8  & 3.34 \\
+16 & 3.99 \\
+\hline
+\end{tabular}
+\end{table}
+
+Ces résultats sont conformes à ce qui était attendu : on observe un nombre de cycles considérablement plus élevé pour exécuter le produit matriciel, alors même que le nombre d’instructions reste comparable. Cela met en évidence non seulement l’effet bénéfique d’une mémoire partagée de type L2 placée avant le bus reliant les cœurs à la RAM, mais aussi l’impact de L2 sur la dynamique de parallélisation. En effet, l’analyse des \emph{speedups} lors de l’augmentation du nombre de threads montre que l’optimisation des mêmes opérations est fortement dégradée en l’absence de L2 : la réduction du nombre de cycles s’écarte de manière bien plus marquée de la droite idéale que dans le cas du processeur disposant d’une hiérarchie mémoire complète. Ce comportement est cohérent avec la contention accrue sur les niveaux de mémoire restants, qui induit davantage de \emph{stalls} et des accès plus coûteux, entraînant des instructions effectives prenant plus de cycles. Ainsi, l’absence de L2 apparaît comme l’un des principaux facteurs limitants de l’amélioration via la parallélisation OpenMP, ce qui explique la dynamique non linéaire et la saturation du \emph{speedup} lorsque le nombre de threads augmente de manière significative.
+
+\subsubsection{valeur maximale de l’IPC pour chaque configuration}
+
+L’IPC maximal augmente avec le parallélisme : de \(0.352\) à \(1\) thread jusqu’à \(1.546\) à \(16\) threads. Cette progression reflète un meilleur recouvrement des latences mémoire grâce au parallélisme.
+
+\subsection{Discussion et interprétation}
+
+En conclusion, le produit matriciel profite de la parallélisation OpenMP, car une part significative du calcul est parallélisable.  
+Cependant, le \emph{speedup} n’est pas proportionnel au nombre de threads à cause des phases séquentielles (initialisation et validation) exécutées par le \emph{master}.  
+Quand le nombre de threads augmente, les accès concurrents aux caches partagés et à la RAM augmentent aussi, ce qui crée de la contention.  
+Cette contention se traduit par davantage de défauts de cache et de \emph{stalls}, limitant le gain marginal des threads supplémentaires.  
+Les écritures parallèles dans la matrice $C$ accroissent le trafic de cohérence (invalidations et transferts de lignes).  
+De plus, l’overhead OpenMP (gestion des threads et barrières implicites) devient plus visible lorsque la charge par thread diminue.  
+Cela peut expliquer une saturation, voire une dégradation, en passant de $8$ à $16$ threads sur certains cas.  
+Ainsi, la hiérarchie mémoire est un facteur déterminant des performances et de la scalabilité.  
+Les gains sont plus proches de l’idéal lorsque la taille du problème augmente et amortit les surcoûts.  
+Les résultats observés reflètent donc un compromis entre parallélisme, mémoire et coûts de coordination.  
