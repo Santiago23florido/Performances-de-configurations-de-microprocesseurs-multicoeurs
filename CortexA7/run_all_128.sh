@@ -1,67 +1,44 @@
 #!/bin/bash
 set -euo pipefail
 
-# ============ Paths (same style as your manual command) ============
+# ============ Paths ============
 GEM5_BIN="/home/g/gbusnot/ES201/tools/TP5/gem5-stable/build/ARM/gem5.fast"
 GEM5_CONFIG="/home/g/gbusnot/ES201/tools/TP5/gem5-stable/configs/example/se.py"
 APP_BIN="$HOME/TP5/test_omp"
 
-# ============ Fixed matrix size (same as manual) ============
-MATRIX_SIZE="${MATRIX_SIZE:-16}"
+# ============ Fixed matrix size ============
+MATRIX_SIZE=128
 
-# ============ Threads to run (only these) ============
+# ============ Threads to run ============
 THREADS_LIST=(1 2 4 8 16)
-
 # ============ Output root ============
 OUTPUT_ROOT="${OUTPUT_ROOT:-$HOME/TP5/CORTEXA7/results}"
 RUN_ROOT="$OUTPUT_ROOT/m${MATRIX_SIZE}"
 mkdir -p "$RUN_ROOT"
 
-# Summary CSV (one line per run)
+# Summary CSV
 SUMMARY_CSV="$RUN_ROOT/summary_manualstyle_m${MATRIX_SIZE}.csv"
 echo "threads,ipc_max_cpu,cycles_max_cpu,insts_max_cpu,sim_ticks,sim_seconds,run_dir" > "$SUMMARY_CSV"
-
-echo "Runs will be stored in: $RUN_ROOT"
-echo "Summary CSV: $SUMMARY_CSV"
-echo
 
 for t in "${THREADS_LIST[@]}"; do
   RUN_DIR="$RUN_ROOT/t${t}_arm_detailed_L1L2_manualstyle"
   mkdir -p "$RUN_DIR"
 
-  # Clean typical gem5 outputs to avoid mixing old/new
   rm -f "$RUN_DIR/stats.txt" "$RUN_DIR/simout" "$RUN_DIR/simerr" \
         "$RUN_DIR/config.ini" "$RUN_DIR/config.json" 2>/dev/null || true
 
-  # Record exact command for reproducibility
-  CMD_FILE="$RUN_DIR/cmd.txt"
+  # Record command
   {
     echo "OMP_NUM_THREADS=$t $GEM5_BIN \\"
     echo "  $GEM5_CONFIG \\"
     echo "  --cpu-type=arm_detailed -n $t \\"
     echo "  -c $APP_BIN -o \"$t $MATRIX_SIZE\" \\"
     echo "  --caches --l2cache"
-  } > "$CMD_FILE"
+  } > "$RUN_DIR/cmd.txt"
 
-  INFO_FILE="$RUN_DIR/run_info.txt"
-  {
-    echo "date: $(date)"
-    echo "host: $(hostname)"
-    echo "matrix_size: $MATRIX_SIZE"
-    echo "threads: $t"
-    echo "cpu_model: arm_detailed"
-    echo "cache_args: --caches --l2cache"
-    echo "gem5_bin: $GEM5_BIN"
-    echo "gem5_config: $GEM5_CONFIG"
-    echo "app_bin: $APP_BIN"
-  } > "$INFO_FILE"
+  echo "=== Running: threads=$t, m=$MATRIX_SIZE -> $RUN_DIR ==="
 
-  echo "=== Running manual-style: threads=$t, m=$MATRIX_SIZE -> $RUN_DIR ==="
-
-  # EXACTLY manual style:
-  # - OMP_NUM_THREADS exported inline
-  # - se.py invoked directly after gem5.fast
-  # - uses -c/-o like your working command
+  # Manual-style run (no --env, no --remote-gdb-port=0)
   OMP_NUM_THREADS="$t" \
   "$GEM5_BIN" -d "$RUN_DIR" \
     "$GEM5_CONFIG" \
@@ -69,7 +46,7 @@ for t in "${THREADS_LIST[@]}"; do
     -c "$APP_BIN" -o "$t $MATRIX_SIZE" \
     --caches --l2cache
 
-  # Extract a few key metrics from stats.txt
+  # Extract key metrics
   STATS_FILE="$RUN_DIR/stats.txt"
   ipc_max=""
   cycles_max=""
@@ -88,7 +65,6 @@ for t in "${THREADS_LIST[@]}"; do
   echo "${t},${ipc_max},${cycles_max},${insts_max},${sim_ticks},${sim_secs},${RUN_DIR}" >> "$SUMMARY_CSV"
 done
 
-echo
 echo "Done."
 echo "All run folders are under: $RUN_ROOT/"
 echo "CSV summary is here: $SUMMARY_CSV"
