@@ -1,0 +1,180 @@
+warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (512 Mbytes)
+0: system.remote_gdb.listener: listening for remote gdb on port 7000
+0: system.remote_gdb.listener: listening for remote gdb on port 7001
+0: system.remote_gdb.listener: listening for remote gdb on port 7002
+0: system.remote_gdb.listener: listening for remote gdb on port 7003
+0: system.remote_gdb.listener: listening for remote gdb on port 7004
+0: system.remote_gdb.listener: listening for remote gdb on port 7005
+0: system.remote_gdb.listener: listening for remote gdb on port 7006
+0: system.remote_gdb.listener: listening for remote gdb on port 7007
+0: system.remote_gdb.listener: listening for remote gdb on port 7008
+0: system.remote_gdb.listener: listening for remote gdb on port 7009
+0: system.remote_gdb.listener: listening for remote gdb on port 7010
+0: system.remote_gdb.listener: listening for remote gdb on port 7011
+0: system.remote_gdb.listener: listening for remote gdb on port 7012
+0: system.remote_gdb.listener: listening for remote gdb on port 7013
+0: system.remote_gdb.listener: listening for remote gdb on port 7014
+0: system.remote_gdb.listener: listening for remote gdb on port 7015
+0: system.remote_gdb.listener: listening for remote gdb on port 7024
+0: system.remote_gdb.listener: listening for remote gdb on port 7025
+0: system.remote_gdb.listener: listening for remote gdb on port 7026
+0: system.remote_gdb.listener: listening for remote gdb on port 7027
+0: system.remote_gdb.listener: listening for remote gdb on port 7028
+0: system.remote_gdb.listener: listening for remote gdb on port 7029
+0: system.remote_gdb.listener: listening for remote gdb on port 7030
+0: system.remote_gdb.listener: listening for remote gdb on port 7031
+0: system.remote_gdb.listener: listening for remote gdb on port 7032
+0: system.remote_gdb.listener: listening for remote gdb on port 7033
+0: system.remote_gdb.listener: listening for remote gdb on port 7034
+0: system.remote_gdb.listener: listening for remote gdb on port 7035
+0: system.remote_gdb.listener: listening for remote gdb on port 7036
+0: system.remote_gdb.listener: listening for remote gdb on port 7037
+0: system.remote_gdb.listener: listening for remote gdb on port 7038
+0: system.remote_gdb.listener: listening for remote gdb on port 7039
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: ignoring syscall futex(606260, ...)
+      (further warnings will be suppressed)
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: User mode does not have SPSR
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop
+warn: allocating bonus target for snoop

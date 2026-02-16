@@ -1,0 +1,3 @@
+warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (512 Mbytes)
+warn: ignoring syscall futex(609092, ...)
+      (further warnings will be suppressed)
