@@ -49,3 +49,33 @@ Les courbes d’efficacité globale associées aux mêmes configurations sont pr
     \caption{Comparaison de l’efficacité globale pour Cortex-A15 selon la largeur du pipeline (\(m=16\) et \(m=128\)).}
     \label{fig:efficacite_cortex_a15_m16_m128}
 \end{figure}
+
+\subsection{valeur maximale de l’IPC pour chaque configuration}
+
+Pour Cortex-A15, l’IPC peut être analysé selon deux indicateurs complémentaires : l’IPC maximal observé sur un cœur (\emph{max system.cpu*.ipc}) et l’IPC global de la configuration (\(\mathrm{sim\_insts}/\max(\mathrm{numCycles})\)). Les résultats pour \(m=16\) et \(m=128\), en distinguant les largeurs de voie, sont présentés dans la Figure~\ref{fig:ipc_cortex_a15_m16_m128}.
+
+\begin{figure}[H]
+    \centering
+    \subfloat[IPC maximal par configuration]{
+        \includegraphics[width=0.48\textwidth]{../CortexA15/ipc_max_m16_m128_cortexA15_widths.png}
+        \label{fig:ipc_max_cortex_a15_m16_m128}
+    }
+    \hfill
+    \subfloat[IPC global par configuration]{
+        \includegraphics[width=0.48\textwidth]{../CortexA15/ipc_global_m16_m128_cortexA15_widths.png}
+        \label{fig:ipc_global_cortex_a15_m16_m128}
+    }
+    \caption{Comparaison des métriques IPC pour Cortex-A15 (\(m=16\) et \(m=128\)).}
+    \label{fig:ipc_cortex_a15_m16_m128}
+\end{figure}
+
+En termes d’IPC maximal par thread dans la simulation, on observe pour $m=16$ une dynamique similaire à celle discutée précédemment : l’IPC maximal atteint par chacun des threads ne dépend pas directement du nombre de threads utilisés par l’application. En revanche, pour une dimension de matrice $m=128$, plusieurs effets peuvent conduire à une diminution de l’IPC maximal des threads. D’une part, la contention en L2 et au niveau de la mémoire augmente lorsque davantage de cœurs demandent simultanément des données, ce qui se traduit par plus de \emph{misses}, davantage de files d’attente et une latence effective plus élevée ; ainsi, malgré la présence de plus de cœurs, chacun passe proportionnellement plus de temps à attendre les données. D’autre part, la cohérence de cache et le trafic associé (et, dans certains cas, le \emph{false sharing}) peuvent dégrader l’IPC lorsque plusieurs threads accèdent à des données proches partageant les mêmes lignes de cache, provoquant des invalidations et un effet de \emph{ping-pong} coûteux. Enfin, l’overhead d’OpenMP augmente avec le nombre de threads : barrières, répartition du travail et synchronisations représentent un coût relatif plus important, en particulier lorsque la charge utile par thread diminue ; avec $16$ threads et $m=128$, la quantité de travail assignée à chaque thread peut devenir suffisamment faible pour que cet overhead pèse fortement sur l’exécution. Néanmoins, du point de vue de l’IPC global, la dynamique reste comparable à celle observée sur le A7, avec des augmentations quasi linéaires de l’IPC lorsque le nombre de threads croît. De plus, lorsque la dimension de la matrice atteint $m=128$, on obtient des IPC globaux sensiblement plus élevés, ce qui traduit une meilleure exploitation du parallélisme et une contribution plus marquée de l’optimisation des opérations de calcul lorsque le nombre de threads employés augmente.
+
+\subsection{Discussion et interprétation}
+
+Dans un scénario où la charge de calcul est faible, l’intégration de multiples threads produit bien un \emph{speedup}, mais la dynamique de réponse du système devient rapidement dominée par les accès mémoire et par la synchronisation. Cela implique que l’effet d’agrégation de threads est moins significatif en termes de nombre de cycles nécessaires pour réaliser la multiplication matricielle. C’est pourquoi, lorsque la taille de la matrice augmente et que le problème devient plus \emph{compute bound}, on commence à obtenir de meilleurs \emph{speedups}, comme on l’observe également avec le microprocesseur Cortex-A15.
+
+Par ailleurs, l’augmentation de la largeur des voies (par exemple de $2$ à $4$ puis $8$) peut être reliée à une diminution du nombre de cycles requis pour exécuter le produit matriciel, puisque davantage d’instructions peuvent être traitées par cycle. Toutefois, précisément parce que cette optimisation réduit le temps d’exécution de base, les gains relatifs associés à la parallélisation ont tendance à diminuer pour les configurations à $4$ ou $8$ voies : une fraction plus importante du temps total est alors expliquée par des coûts non idéaux (attentes mémoire, cohérence et synchronisation) plutôt que par le calcul utile.
+
+Enfin, on constate que, pour $8$ threads et une matrice de taille $M=128$, les IPC globaux obtenus ne sont que légèrement supérieurs à ceux mesurés sur les configurations de type A7. Cela s’explique par le fait que, compte tenu de la nature de l’opération (produit matriciel) et de la taille considérée, l’exécution devient rapidement \emph{memory bound} et dépend fortement des surcoûts liés à la synchronisation et à l’exécution OpenMP. En conséquence, les avantages micro-architecturaux du A15, mis en évidence lors du premier TP, se trouvent nettement atténués dans ce contexte, ce qui rend la différence entre l’utilisation d’un A7 et d’un A15 relativement peu significative pour cette application.
+
