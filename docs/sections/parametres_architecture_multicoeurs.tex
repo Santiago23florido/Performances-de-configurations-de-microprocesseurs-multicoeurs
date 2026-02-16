@@ -1,2 +1,22 @@
 \section{Paramètres de l'architecture multicœurs}
 
+En plus de la configuration des caches d’instructions (I-cache) et du cache L2 unifié (présents dans le fichier d’options), le fichier de configuration du microprocesseur permet aussi d’identifier d’autres éléments micro-architecturaux importants. Par exemple, le prédicteur de branchement indiqué est un \emph{Tournament Branch Predictor}, c’est-à-dire un prédicteur « composé » qui combine plusieurs prédicteurs internes (par exemple un prédicteur local et un prédicteur global) et s’appuie sur un méta-prédicteur pour décider, selon le contexte, lequel des deux doit être privilégié. En pratique, ce mécanisme fournit généralement une meilleure précision qu’un prédicteur plus simple, au prix d’une complexité matérielle et d’un coût énergétique potentiellement plus élevés. On trouve également une \emph{fetch queue}, située entre les étages \emph{Fetch} et \emph{Decode} (ou très proche de cette frontière), dont le rôle est de stocker les instructions ou micro-opérations déjà fetch mais pas encore décodées ; elle permet de poursuivre le fetch tant que la file n’est pas pleine lorsque le decode est ralenti par backpressure, et inversement de maintenir le decode actif en consommant les $\mu$ops déjà présentes lorsque le fetch est bloqué, par exemple à cause d’un \emph{miss} du cache d’instructions. Sa capacité est de $32~\mu\text{ops}/\text{thread}$. Le paramètre \emph{DecodeWidth} correspond au nombre maximal de micro-opérations décodées par cycle, ici $8~\mu\text{ops}/\text{cycle}$, tandis que \emph{IssueWidth} représente le nombre maximal de $\mu$ops émises par cycle depuis la file de scheduling vers les unités fonctionnelles, également $8~\mu\text{ops}/\text{cycle}$. De même, \emph{CommitWidth} (ou \emph{RetireWidth}) fixe le nombre maximal d’instructions validées par cycle, soit $8~\text{instructions}/\text{cycle}$. Le \emph{Reorder Buffer} (ROB) conserve les instructions en vol afin de garantir un commit en ordre (et la gestion des exceptions précises) et comporte ici $192$ entrées. L’\emph{Instruction Queue} (IQ), aussi appelée \emph{Issue Queue}, est la structure où attendent les instructions renommées jusqu’à ce que les opérandes soient prêts et qu’une unité fonctionnelle soit disponible, avec une capacité de $64$ entrées. Enfin, la \emph{Load Queue} (LQ) et la \emph{Store Queue} (SQ) suivent respectivement les loads et les stores en vol pour gérer la spéculation mémoire, détecter les violations de dépendances et respecter les contraintes d’ordre interne ; chacune dispose de $32$ entrées.
+
+Les cinq paramètres configurables de référence pour la description de l’architecture du microprocesseur sont présentés dans le Tableau~\ref{tab:microarch_config}.
+
+\begin{table}[H]
+\centering
+\caption{Paramètres micro-architecturaux configurables (extrait du fichier de configuration).}
+\label{tab:microarch_config}
+\begin{tabular}{ll}
+\hline
+\textbf{Paramètre} & \textbf{Valeur} \\
+\hline
+\texttt{branchPred}      & \texttt{TournamentBP(numThreads = Parent.numThreads)} \\
+\texttt{fetchQueueSize}  & 32 \\
+\texttt{decodeWidth}     & 8 \\
+\texttt{issueWidth}      & 8 \\
+\texttt{numROBEntries}   & 192 \\
+\hline
+\end{tabular}
+\end{table}
