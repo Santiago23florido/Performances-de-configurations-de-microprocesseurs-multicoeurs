@@ -1,0 +1,34 @@
+# LaTeX generated files (keep .tex and .pdf tracked)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.xdv
+*.dvi
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.xdy
+*.vrb
+
+# Windows metadata artifacts
+*:Zone.Identifier
+*:Zone.Identifier:Zone.Identifier

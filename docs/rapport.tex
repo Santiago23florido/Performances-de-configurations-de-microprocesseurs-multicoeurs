@@ -1,0 +1,165 @@
+\documentclass[11pt,a4paper]{article}
+
+% ----------------------------------------------------
+% PACKAGES ESSENTIELS
+% ----------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{physics}
+\usepackage{titlesec}
+\usepackage[strict]{changepage}
+\usepackage{framed}
+\usepackage{multirow}
+\usepackage{algorithmic}
+\usepackage[section]{placeins}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{hyperref}
+
+% ----------------------------------------------------
+% PARAMETRES DE MISE EN PAGE
+% ----------------------------------------------------
+\geometry{margin=2.5cm}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\pgfplotsset{compat=1.18}
+
+% ----------------------------------------------------
+% COULEURS ENSTA
+% ----------------------------------------------------
+\definecolor{enstaBleuFonce}{HTML}{003366}
+\definecolor{enstaBleuClair}{HTML}{0073CF}
+\definecolor{formalshade}{rgb}{0.95,0.95,1}
+
+% ----------------------------------------------------
+% CONFIGURATION DES LIENS
+% ----------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=enstaBleuFonce,
+    urlcolor=blue,
+    citecolor=gray
+}
+
+% ----------------------------------------------------
+% STYLE DES SECTIONS
+% ----------------------------------------------------
+\titleformat{\section}[block]
+  {\normalfont\Large\bfseries\color{enstaBleuFonce}}
+  {\thesection}{1em}{}
+  [\vspace{0.3em}\color{enstaBleuFonce}\titlerule\vspace{0.3em}]
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{enstaBleuClair}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black!70}}
+  {\thesubsubsection}{1em}{}
+
+% ----------------------------------------------------
+% EN-TETES ET PIEDS DE PAGE
+% ----------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{ENSTA Paris}
+\fancyhead[R]{TP : Hierarchie memoire et caches}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{16pt}
+
+% ----------------------------------------------------
+% ENVIRONNEMENT FORMAL (ENCADRE)
+% ----------------------------------------------------
+\newenvironment{formal}{%
+\def\FrameCommand{%
+  \hspace{1pt}%
+  {\color{enstaBleuFonce}\vrule width 2pt}%
+  {\color{formalshade}\vrule width 4pt}%
+  \colorbox{formalshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}%
+\begin{adjustwidth}{}{7pt}%
+\vspace{4pt}%
+}{%
+\vspace{4pt}\end{adjustwidth}\endMakeFramed%
+}
+
+% ----------------------------------------------------
+% DEBUT DU DOCUMENT
+% ----------------------------------------------------
+\begin{document}
+
+% ====================================================
+% PAGE DE COUVERTURE
+% ====================================================
+\begin{titlepage}
+    \centering
+    \vspace*{4cm}
+
+    \includegraphics[width=0.6\textwidth]{figures/ENSTA_LOGP.png}\par\vspace{0.5cm}
+
+    \vspace{0.5cm}
+    {\Large Analyse de performances de configurations de microprocesseurs multicoeurs pour des applications parallèles \par}
+    \vspace{0.2cm}
+    {\huge\bfseries Rapport de Travaux Pratiques \par}
+    \vspace{3cm}
+    {\Large Luiz Gariglio Dos Santos \par}
+    {\Large Helena Guachalla De Andrade \par}
+    {\Large Santiago Florido Gomez \par}
+    {\Large Franck Ulrich Kenfack Noumedem \par}
+    \vspace{1.5cm}
+    \textbf{Programme :} Ing\'enieur STIC \par
+    \vfill
+    Ecole Nationale des Techniques Avancees\\
+    ENSTA Paris\\
+    Fevrier 2026 \par
+\end{titlepage}
+
+% ====================================================
+% TABLE DES MATIERES
+% ====================================================
+\newpage
+\tableofcontents
+\newpage
+
+% ====================================================
+% RESUME
+% ====================================================
+\section{Resume}
+
+Ce rapport analyse l'influence de la hi\'erarchie m\'emoire et des contraintes \`energ\'etiques sur les performances des processeurs. Dans un premier temps, nous \`evaluons l'impact des caches L1/L2 sur des calculs matriciels, en mettant en \`evidence le r\^ole cl\'e de la localit\'e et de l'organisation des donn\'ees. Dans un second temps, nous menons une exploration de l'espace de conception d'une architecture \emph{big.LITTLE} (Cortex-A7/A15) afin d'optimiser les configurations pour Dijkstra et Blowfish. Les performances sont mesur\'ees avec Gem5 (IPC, taux de \emph{miss}) et les co\^uts physiques des caches sont estim\'es avec CACTI, compil\'e en version~7.0 pour fiabiliser les r\'esultats en 32~nm.
+
+% ====================================================
+% INTRODUCTION
+% ====================================================
+\section{Introduction}
+
+Dans le contexte actuel des syst\`emes embarqu\'es et du calcul haute performance, la conception de processeurs est confront\'ee \`a deux contraintes majeures : le \emph{mur m\'emoire} (\emph{Memory Wall}), qui limite les gains de performance lorsque la hi\'erarchie m\'emoire ne suit pas le rythme du calcul, et l'efficacit\'e \`energ\'etique, devenue d\'eterminante pour les plateformes modernes. Ce rapport de travaux pratiques s'articule autour de deux \`etudes compl\'ementaires visant \`a caract\'eriser et quantifier ces probl\'ematiques \`a travers des exp\'erimentations reproductibles.
+
+La premi\`ere partie (Exercice~3) analyse l'impact de la hi\'erarchie m\'emoire (caches L1/L2) sur des algorithmes de calcul matriciel. L'objectif est de montrer que les performances ne d\'ependent pas uniquement de l'algorithme, mais aussi de la mani\`ere dont les donn\'ees sont organis\'ees et acc\'ed\'ees en m\'emoire, notamment via la localit\'e spatiale et temporelle.
+
+La seconde partie (Exercice~4) porte sur une exploration de l'espace de conception (\emph{Design Space Exploration}, DSE) appliqu\'ee \`a une architecture h\'et\'erog\`ene \emph{big.LITTLE}. Nous dimensionnons un cluster \emph{LITTLE} (Cortex-A7) et un cluster \emph{big} (Cortex-A15) pour des charges applicatives distinctes (Dijkstra et Blowfish), en mettant en \`evidence les compromis entre performance, co\^ut en surface et consommation.
+
+Pour mener ces analyses, nous nous appuyons sur deux outils principaux : Gem5, utilis\'e en mode \emph{Syscall Emulation} pour simuler l'ex\'ecution et extraire des indicateurs tels que l'IPC et les taux de \emph{miss}, et CACTI, utilis\'e pour estimer la surface et l'\'energie des caches. Enfin, afin de garantir la fiabilit\'e des r\'esultats de l'Exercice~4, nous avons automatis\'e les campagnes de simulation et pris l'initiative de compiler CACTI~7.0, ce qui a permis de corriger des erreurs critiques observ\'ees avec la version standard lors des estimations en technologies fines (notamment 32~nm).
+
+\input{sections/coherence_de_cache.tex}
+
+\begin{thebibliography}{00}
+\bibitem{Profiling} M. J. P. (University of York), ``Profiling,'' \emph{Lecture Notes (4th Year HPC), University of York}. [Online]. Available: https://www-users.york.ac.uk/\textasciitilde{}mijp1/teaching/4th\_year\_HPC/lecture\_notes/Profiling.pdf. Accessed: Feb. 9, 2026.
+\end{thebibliography}
+
+\end{document}
