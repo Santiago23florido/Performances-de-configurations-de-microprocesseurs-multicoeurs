@@ -1,0 +1,5 @@
+OMP_NUM_THREADS=1 /home/g/gbusnot/ES201/tools/TP5/gem5-stable/build/ARM/gem5.fast \
+  /home/g/gbusnot/ES201/tools/TP5/gem5-stable/configs/example/se.py \
+  --cpu-type=arm_detailed -n 1 \
+  -c /home/s/santiago.florido/TP5/test_omp -o "1 128" \
+  --caches --l2cache

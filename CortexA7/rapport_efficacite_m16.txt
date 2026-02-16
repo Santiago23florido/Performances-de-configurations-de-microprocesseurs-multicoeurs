@@ -1,0 +1,17 @@
+Rapport speedup et efficacite (Cortex-A7)
+Source: CortexA7/m16
+
+Colonnes: threads, cycles_max, speedup_vs_1, efficacite_globale(%), gain_local, efficacite_locale(%), efficacite_marginale_par_thread(%)
+
+t= 1 | cycles=  118030 | S=1.000 | Eglob=100.00% | GainLocal=    - | Elocale=     -% | Emarg=     -%
+t= 2 | cycles=  103114 | S=1.145 | Eglob= 57.23% | GainLocal=1.145 | Elocale=  57.2% | Emarg=  14.5%
+t= 4 | cycles=   95958 | S=1.230 | Eglob= 30.75% | GainLocal=1.075 | Elocale=  53.7% | Emarg=   4.3%
+t= 8 | cycles=   93142 | S=1.267 | Eglob= 15.84% | GainLocal=1.030 | Elocale=  51.5% | Emarg=   0.9%
+t=16 | cycles=   96504 | S=1.223 | Eglob=  7.64% | GainLocal=0.965 | Elocale=  48.3% | Emarg=  -0.6%
+
+Meilleur speedup observe: S=1.267 pour 8 threads.
+Rendements marginaux en baisse (efficacite locale < 80%):
+- Passage vers 2 threads: 57.2% d'efficacite locale.
+- Passage vers 4 threads: 53.7% d'efficacite locale.
+- Passage vers 8 threads: 51.5% d'efficacite locale.
+- Passage vers 16 threads: 48.3% d'efficacite locale.
