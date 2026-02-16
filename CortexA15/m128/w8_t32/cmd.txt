@@ -1,0 +1,6 @@
+OMP_NUM_THREADS=32 \
+"/home/g/gbusnot/ES201/tools/TP5/gem5-stable/build/ARM/gem5.fast" --outdir="/home/s/santiago.florido/TP5/CORTEXA15/results/m128/w8_t32" \
+  "/home/g/gbusnot/ES201/tools/TP5/gem5-stable/configs/example/se.py" \
+  --caches --l2cache \
+  -n 32 --cpu-type=detailed --o3-width=8 \
+  -c "/home/s/santiago.florido/TP5/test_omp" -o "32 128"

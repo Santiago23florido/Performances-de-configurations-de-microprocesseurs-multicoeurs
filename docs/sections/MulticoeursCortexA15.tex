@@ -1,0 +1,51 @@
+\section{Architecture multicœurs avec des processeurs superscalaires in-order (Cortex A15)}
+\subsection{Chemin critique, synchronisation et cycles dominants en exécution OpenMP}
+De la même manière que dans le cas du Cortex-A7, le goulot d’étranglement se situe dans l’exécution des sections non parallélisables du code ; par conséquent, c’est le \emph{master} qui détermine le maximum de cycles pour chaque exécution, selon les configurations considérées. Cela reste vrai même si ce cœur n’est pas nécessairement celui qui passe le plus de temps dans l’exécution des sections strictement parallèles. On retrouve ainsi la même conclusion que pour l’autre microprocesseur et l’ensemble de ses configurations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../CortexA15/cycles_execution_m16_cortexA15_widths.png}
+    \caption{Cortex-A15 (\(m=16\)) : nombre de cycles d’exécution selon le nombre de threads et la largeur du pipeline.}
+    \label{fig:cycles_execution_m16_cortex_a15_widths}
+\end{figure}
+
+\subsection{Speed-Up per configuration}
+
+Dans le but de disposer d’une perspective de comparaison valide, il est proposé d’analyser le rendement du système en parallélisation dans des conditions comparables à celles du Cortex-A7. Ainsi, on vérifie le comportement pour $1$ à $16$ threads avec des matrices de taille $m=16$, en considérant ici l’effet du \emph{largeur de voie} (\emph{issue width}). Il apparaît que, comme dans le cas du A7, pour ces configurations la fraction de calcul parallélisable n’est pas suffisamment représentative au regard des pénalités mémoire (défauts et latences), des surcoûts liés à l’augmentation du nombre de threads (overhead OpenMP) et du poids des sections linéaires non parallélisables. Par conséquent, les \emph{speedups} ne dépassent pas $1.3$ et, de manière attendue, on observe des \emph{speedups} légèrement plus élevés pour les configurations à largeur de voie plus importante, celles-ci permettant de traiter davantage d’instructions par cycle et donc d’améliorer le débit d’exécution lorsque l’application n’est pas strictement bornée par la mémoire.
+
+Afin de comparer ces résultats à un cas où la complexité de calcul augmente, il a également été proposé, comme pour l’étude du Cortex-A15, d’évaluer la parallélisation de $1$ à $16$ threads pour des largeurs de voie de $2$, $4$ et $8$ sur le produit matriciel avec $m=128$. Les résultats mettent en évidence une dynamique comparable à celle observée pour $m=128$ sur le A7 : un comportement initial relativement proche de l’idéal lorsque l’on augmente le nombre de threads, puis une saturation à partir de $8$ threads, avec un écart croissant à la courbe idéale. Cette saturation s’explique par l’augmentation des opérations mémoire et des défauts de cache, par l’overhead associé à un plus grand nombre de threads, ainsi que par le coût relatif des sections linéaires non parallélisables qui devient plus visible lorsque la partie parallèle se réduit. Enfin, on peut conclure que la configuration à largeur de voie $2$ présente un nombre de cycles supérieur aux autres pour l’ensemble des nombres de threads, et qu’on observe globalement une relation inverse entre le nombre de threads et le nombre de cycles requis par l’application. Néanmoins, cette configuration (voie $2$), étant la moins performante en absolu, se révèle aussi plus sensible aux gains de la parallélisation, ce qui se traduit par des \emph{speedups} plus marqués lorsqu’on augmente le nombre de threads, par rapport aux configurations à $4$ et $8$ voies qui, elles, présentent des dynamiques plus proches l’une de l’autre.
+
+
+Les courbes de \emph{speedup} (référence à \(1\) thread) pour Cortex-A15 sont présentées pour \(m=16\) et \(m=128\) dans la Figure~\ref{fig:speedup_cortex_a15_m16_m128}.
+
+\begin{figure}[H]
+    \centering
+    \subfloat[\(m=16\) : \emph{Speedup}]{
+        \includegraphics[width=0.48\textwidth]{../CortexA15/speedup_m16_vs_1thread_cortexA15_widths.png}
+        \label{fig:speedup_cortex_a15_m16}
+    }
+    \hfill
+    \subfloat[\(m=128\) (jusqu’à 16 threads) : \emph{Speedup}]{
+        \includegraphics[width=0.48\textwidth]{../CortexA15/speedup_m128_vs_1thread_cortexA15_widths_t16max.png}
+        \label{fig:speedup_cortex_a15_m128_t16}
+    }
+    \caption{Comparaison du \emph{speedup} pour Cortex-A15 selon la largeur du pipeline (\(m=16\) et \(m=128\)).}
+    \label{fig:speedup_cortex_a15_m16_m128}
+\end{figure}
+
+Les courbes d’efficacité globale associées aux mêmes configurations sont présentées dans la Figure~\ref{fig:efficacite_cortex_a15_m16_m128}.
+
+\begin{figure}[H]
+    \centering
+    \subfloat[\(m=16\) : Efficacité globale]{
+        \includegraphics[width=0.48\textwidth]{../CortexA15/efficacite_m16_cortexA15_widths.png}
+        \label{fig:efficacite_cortex_a15_m16}
+    }
+    \hfill
+    \subfloat[\(m=128\) (jusqu’à 16 threads) : Efficacité globale]{
+        \includegraphics[width=0.48\textwidth]{../CortexA15/efficacite_m128_cortexA15_widths_t16max.png}
+        \label{fig:efficacite_cortex_a15_m128_t16}
+    }
+    \caption{Comparaison de l’efficacité globale pour Cortex-A15 selon la largeur du pipeline (\(m=16\) et \(m=128\)).}
+    \label{fig:efficacite_cortex_a15_m16_m128}
+\end{figure}

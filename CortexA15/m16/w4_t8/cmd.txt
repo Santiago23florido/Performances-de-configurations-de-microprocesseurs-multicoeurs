@@ -1,0 +1,6 @@
+OMP_NUM_THREADS=8 \
+"/home/g/gbusnot/ES201/tools/TP5/gem5-stable/build/ARM/gem5.fast" --remote-gdb-port=0 --outdir="/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w4_t8" \
+  "/home/g/gbusnot/ES201/tools/TP5/gem5-stable/configs/example/se.py" \
+  --caches --l2cache \
+  -n 8 --cpu-type=detailed --o3-width=4 \
+  -c "/home/s/santiago.florido/TP5/test_omp" -o "8 16"

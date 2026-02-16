@@ -1,0 +1,16 @@
+threads,width,ipc_max_cpu,cycles_max_cpu,insts_max_cpu,sim_ticks,sim_seconds,run_dir,status
+1,2,,,,63257000,0.000063,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w2_t1,OK
+2,2,1.520815,110343,56187,55171000,0.000055,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w2_t2,OK
+4,2,1.420796,100945,39503,50472000,0.000050,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w2_t4,OK
+8,2,1.342341,98779,32974,49389000,0.000049,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w2_t8,OK
+16,2,1.391451,102641,31142,51320000,0.000051,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w2_t16,OK
+1,4,,,,53179500,0.000053,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w4_t1,OK
+2,4,2.516108,98928,56703,49463500,0.000049,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w4_t2,OK
+4,4,2.328769,94784,39903,47391500,0.000047,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w4_t4,OK
+8,4,2.249268,94586,33881,47292500,0.000047,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w4_t8,OK
+16,4,,,,,,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w4_t16,FAIL
+1,8,,,,52462500,0.000052,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w8_t1,OK
+2,8,2.962839,98292,58362,49145500,0.000049,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w8_t2,OK
+4,8,2.791385,93384,39903,46691500,0.000047,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w8_t4,OK
+8,8,2.833277,93546,37696,46772500,0.000047,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w8_t8,OK
+16,8,,,,,,/home/s/santiago.florido/TP5/CORTEXA15/results/m16/w8_t16,FAIL
