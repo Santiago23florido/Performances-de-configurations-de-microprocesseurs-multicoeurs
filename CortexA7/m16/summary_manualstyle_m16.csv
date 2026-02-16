@@ -1,0 +1,6 @@
+threads,ipc_max_cpu,cycles_max_cpu,insts_max_cpu,sim_ticks,sim_seconds,run_dir
+1,,,,59014500,0.000059,/home/s/santiago.florido/TP5/CORTEXA7/results/m16/t1_arm_detailed_L1L2_manualstyle
+2,1.564412,103114,55305,51556500,0.000052,/home/s/santiago.florido/TP5/CORTEXA7/results/m16/t2_arm_detailed_L1L2_manualstyle
+4,1.427952,95958,39077,47978500,0.000048,/home/s/santiago.florido/TP5/CORTEXA7/results/m16/t4_arm_detailed_L1L2_manualstyle
+8,1.361337,93142,32231,46570500,0.000047,/home/s/santiago.florido/TP5/CORTEXA7/results/m16/t8_arm_detailed_L1L2_manualstyle
+16,1.396118,96504,30237,48251500,0.000048,/home/s/santiago.florido/TP5/CORTEXA7/results/m16/t16_arm_detailed_L1L2_manualstyle
